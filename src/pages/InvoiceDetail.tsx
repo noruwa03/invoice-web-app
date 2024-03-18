@@ -143,9 +143,20 @@ const InvoiceDetail = () => {
                 </Link>
                 <div
                   onClick={handlePrint}
-                  className="px-5 py-2 bg-gray-100 text-sm text-black font-semibold rounded-full cursor-pointer"
+                  className="px-5 py-2 bg-gray-100 text-sm text-black font-semibold rounded-full cursor-pointer flex flex-row items-center gap-3"
                 >
-                  Print
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-printer-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1" />
+                    <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1" />
+                  </svg>
+                  <span>Print</span>
                 </div>
               </div>
               <div className="mt-8 p-4 flex flex-row flex-wrap items-center justify-between gap-2 bg-white text-black dark:text-white dark:bg-slate-800/40 shadow-[0_0px_4px_-1.76px_rgba(0,0,0,0.3)] rounded-lg">
@@ -190,7 +201,7 @@ const InvoiceDetail = () => {
               </div>
 
               <div ref={contentRef}>
-                <div className="mt-6 lg:p-8 p-4 flex flex-row flex-wrap items-center justify-between gap-2 bg-white dark:print:bg-black dark:bg-slate-800/40 dark:text-white shadow-[0_0px_4px_-1.76px_rgba(0,0,0,0.3)] rounded-lg">
+                <div className="mt-6 lg:p-8 p-4 flex flex-row flex-wrap items-center justify-between gap-2 bg-white dark:print:bg-black dark:bg-slate-800/40 dark:text-white shadow-[0_0px_4px_-1.76px_rgba(0,0,0,0.3)] rounded-lg print:rounded-none print:shadow-none">
                   <div className="flex sm:flex-row flex-col sm:items-start items-start justify-between w-full gap-4">
                     <p className="lg:text-2xl text-2xl font-semibold">
                       #{invoiceDetailInfo.id}
