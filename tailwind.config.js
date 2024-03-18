@@ -5,10 +5,12 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        GeneralSans: ["GeneralSans", "serif"]
+        GeneralSans: ["GeneralSans", "serif"],
+      },
+      screens: {
+        print: { raw: "print" },
       },
     },
   },
   plugins: [],
 };
-

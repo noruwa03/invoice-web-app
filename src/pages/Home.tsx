@@ -2,6 +2,7 @@
 import { Fragment, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import BillForm from "../components/BillForm";
+import ThemeChanger from "../components/ThemeChanger";
 
 const Home = () => {
   const [invoiceList, setInvoiceList] = useState<any>([]);
@@ -38,9 +39,10 @@ const Home = () => {
   return (
     <>
       {billForm && <BillForm close={close} />}
-      <div className="h-full bg-white">
-        <div className="font-GeneralSans lg:px-16 sm:px-8 px-4 lg:py-12 py-8">
-          <div className="w-5/5 lg:w-[65%] mx-auto">
+      <div className="font-GeneralSans text-black dark:text-white lg:px-16 sm:px-8 px-4 lg:pt-2 lg:pb-24 pt-2 pb-20">
+        <ThemeChanger />
+        <div className="">
+          <div className="w-5/5 lg:w-[65%] mt-6 mx-auto">
             <div className="flex lg:flex-row flex-col lg:items-center items-start lg:gap-0 gap-3 justify-between">
               <div className="flex flex-col items-start gap-1">
                 <h1 className="lg:text-5xl text-xl font-semibold">Invoice</h1>
@@ -60,7 +62,7 @@ const Home = () => {
                     viewBox="0 0 20 20"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    className="me-2"
+                    className="me-2 dark:[&>path]:fill-white"
                   >
                     <path
                       d="M3.19841 6.20675C3.43891 5.95614 3.81525 5.93336 4.08045 6.1384L4.15643 6.20675L10 12.2955L15.8436 6.20675C16.0841 5.95614 16.4604 5.93336 16.7256 6.1384L16.8016 6.20675C17.0421 6.45735 17.064 6.84951 16.8672 7.12585L16.8016 7.20502L10.479 13.7933C10.2385 14.0439 9.86217 14.0666 9.59697 13.8616L9.52099 13.7933L3.19841 7.20502C2.93386 6.92935 2.93386 6.48241 3.19841 6.20675Z"
@@ -68,13 +70,13 @@ const Home = () => {
                     />
                   </svg>
 
-                  <ul className="hidden absolute lg:top-6 lg:right-0 top-6 -right-[98%] bg-white shadow-[0_0px_4px_-1.76px_rgba(0,0,0,0.3)] w-36 rounded-xl text-sm flex-col z-10">
+                  <ul className="hidden absolute lg:top-6 lg:right-0 top-6 -right-[98%] bg-white dark:bg-[#0e1111] dark:border-[1px] dark:border-gray-50 shadow-[0_0px_4px_-1.76px_rgba(0,0,0,0.3)] w-36 rounded-xl text-sm flex-col z-10">
                     {filterBy.map((data) => {
                       return (
                         <Fragment key={data.id}>
                           <li
                             onClick={() => selectFilter(data)}
-                            className="my-2 px-5 py-1 hover:bg-gray-100"
+                            className="my-2 px-5 py-1 hover:bg-gray-100 dark:hover:bg-[#34CAA5]"
                           >
                             {data.name}
                           </li>
@@ -133,7 +135,7 @@ const Home = () => {
                       <Fragment key={data.id}>
                         <Link
                           to={`/invoice/${data.id}`}
-                          className="p-4 flex flex-row flex-wrap items-center justify-between gap-2 cursor-pointer bg-white shadow-[0_0px_4px_-1.76px_rgba(0,0,0,0.3)] rounded-lg [&>*>svg]:hover:translate-x-1"
+                          className="p-4 flex flex-row flex-wrap items-center justify-between gap-2 cursor-pointer bg-white dark:bg-slate-800/40 dark:text-white shadow-[0_0px_4px_-1.76px_rgba(0,0,0,0.3)] rounded-lg [&>*>svg]:hover:translate-x-1"
                         >
                           <div className="lg:w-28 sm:w-32 w-[48%] font-semibold text-base">
                             #{data.id}
@@ -144,9 +146,19 @@ const Home = () => {
                             ).toDateString()}
                           </div>
                           <div className="lg:w-28 sm:w-[50%] w-full text-slate-400 text-base flex flex-row gap-2">
-                            {data.invoiceInfo.details.clientName}
+                            <span className="lg:block hidden">
+                              {data.invoiceInfo.details.clientName.substring(
+                                0,
+                                9
+                              )}
+                              {data.invoiceInfo.details.clientName.length >=
+                                8 && "..."}
+                            </span>
+                            <span className="lg:hidden block">
+                              {data.invoiceInfo.details.clientName}
+                            </span>
                           </div>
-                          <div className="lg:w-[6.5rem] w-[48%] lg:text-end text-start font-semibold text-black text-xl">
+                          <div className="lg:w-[6.5rem] w-[48%] lg:text-end text-start font-semibold text-black dark:text-white text-xl">
                             ₦{" "}
                             {new Intl.NumberFormat("en-US").format(
                               data.totalPrice
@@ -154,7 +166,7 @@ const Home = () => {
                           </div>
                           <div className="lg:w-36 w-[48%] flex flex-row items-center justify-end lg:gap-6 gap-3">
                             <div
-                              className={`px-5 py-2 bg-green-100/40 text-sm rounded-lg ${
+                              className={`px-5 py-2 bg-green-100/40 dark:bg-gray-100 text-sm rounded-lg ${
                                 data.invoiceInfo.details.status === "Success"
                                   ? "text-[#34CAA5]"
                                   : data.invoiceInfo.details.status === "Failed"
@@ -170,7 +182,7 @@ const Home = () => {
                               viewBox="0 0 20 20"
                               fill="none"
                               xmlns="http://www.w3.org/2000/svg"
-                              className="-rotate-90 transition-all duration-150 ease-linear"
+                              className="-rotate-90 transition-all duration-150 ease-linear dark:[&>path]:fill-white"
                             >
                               <path
                                 d="M3.19841 6.20675C3.43891 5.95614 3.81525 5.93336 4.08045 6.1384L4.15643 6.20675L10 12.2955L15.8436 6.20675C16.0841 5.95614 16.4604 5.93336 16.7256 6.1384L16.8016 6.20675C17.0421 6.45735 17.064 6.84951 16.8672 7.12585L16.8016 7.20502L10.479 13.7933C10.2385 14.0439 9.86217 14.0666 9.59697 13.8616L9.52099 13.7933L3.19841 7.20502C2.93386 6.92935 2.93386 6.48241 3.19841 6.20675Z"

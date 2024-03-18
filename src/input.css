@@ -2,15 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-    font-family: "GeneralSans";
-    src: url("../src/assets/fonts/GeneralSans-Regular.otf");
+body {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
+@font-face {
+  font-family: "GeneralSans";
+  src: url("../src/assets/fonts/GeneralSans-Regular.otf");
+}
+
+input[type="checkbox"] {
+  margin: 0;
+  display: none;
+  background-color: transparent;
+  left: 99999px;
+}
+
+.check-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  height: 2.3rem;
+  width: 5rem;
+  position: relative;
+  border-radius: 9999px;
+  cursor: pointer;
+}
+
+.check-label svg {
+  z-index: 40;
+}
+
+.switcher {
+  position: absolute;
+  left: 2px;
+
+  width: 2.3rem;
+  height: 2.15rem;
+  transform: scale(0.9);
+  background-color: #34caa5;
+  border-radius: 100%;
+  transition: 0.3s ease;
+}
+
+input[type="checkbox"]:checked ~ .check-label .switcher {
+  background-color: #34caa5;
+  position: absolute;
+  left: 2.6rem;
+  transition: 0.3s ease;
+}
+
+input[type="checkbox"]:checked ~ .check-label .sun path {
+  fill: #b2abab;
+}
+
+input[type="checkbox"]:checked ~ .check-label .moon path {
+  fill: #fff;
+}
 
 .loader {
   border: 8px solid #f3f3f3;
-  border-top: 8px solid #34CAA5;
+  border-top: 8px solid #34caa5;
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -18,6 +72,10 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

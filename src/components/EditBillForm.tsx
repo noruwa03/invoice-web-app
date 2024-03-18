@@ -1,27 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeEvent, Fragment, useState } from "react";
-import ShortUniqueId from "short-unique-id";
+import { useNavigate } from "react-router-dom";
 
 interface IBillForm {
   close: () => void;
+  id: string | any;
+  invoiceDetailInfo: any;
 }
 
-const BillForm = (props: IBillForm) => {
-  const invoiceInfoList: any = window.localStorage.getItem("invoice")
-    ? JSON.parse(window.localStorage.getItem("invoice") as string | any)
-    : [];
+const EditBillForm = (props: IBillForm) => {
+  const navigate = useNavigate();
 
   const [details, setDetails] = useState({
-    streetAddressFrom: "",
-    cityFrom: "",
-    countryFrom: "",
-    clientName: "",
-    clientEmail: "",
-    streetAddressTo: "",
-    cityTo: "",
-    countryTo: "",
-    invoiceDate: "",
-    status: "Pending",
+    streetAddressFrom:
+      props.invoiceDetailInfo.invoiceInfo.details.streetAddressFrom,
+    cityFrom: props.invoiceDetailInfo.invoiceInfo.details.cityFrom,
+    countryFrom: props.invoiceDetailInfo.invoiceInfo.details.countryFrom,
+    clientName: props.invoiceDetailInfo.invoiceInfo.details.clientName,
+    clientEmail: props.invoiceDetailInfo.invoiceInfo.details.clientEmail,
+    streetAddressTo:
+      props.invoiceDetailInfo.invoiceInfo.details.streetAddressTo,
+    cityTo: props.invoiceDetailInfo.invoiceInfo.details.cityTo,
+    countryTo: props.invoiceDetailInfo.invoiceInfo.details.countryTo,
+    invoiceDate: props.invoiceDetailInfo.invoiceInfo.details.invoiceDate,
+    status: props.invoiceDetailInfo.invoiceInfo.details.status,
   });
 
   const statusOptions = [
@@ -30,8 +32,6 @@ const BillForm = (props: IBillForm) => {
     { id: 3, name: "Failed" },
   ];
 
-  const uid = new ShortUniqueId({ length: 10 });
-
   const userFormHandler = (
     evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -39,21 +39,13 @@ const BillForm = (props: IBillForm) => {
 
     setDetails((prev) => ({ ...prev, [name]: value }));
   };
-  const [productInput, showProductInput] = useState(false);
-  const [data, setData] = useState<any>([
-    { productName: "", price: "", quantity: "" },
-  ]);
+  const [data, setData] = useState<any>(
+    props.invoiceDetailInfo.invoiceInfo.productList
+  );
 
   const addProduct = () => {
-    if (productInput) {
-      const concateURL = [
-        ...data,
-        { productName: "", price: "", quantity: "" },
-      ];
-      setData(concateURL);
-    } else {
-      showProductInput(true);
-    }
+    const concateURL = [...data, { productName: "", price: "", quantity: "" }];
+    setData(concateURL);
   };
 
   const delProduct = (evt: any, index: number) => {
@@ -78,16 +70,30 @@ const BillForm = (props: IBillForm) => {
 
   const submitHandler = (evt: any) => {
     evt.preventDefault();
+
+    const localStorageData = JSON.parse(
+      window.localStorage.getItem("invoice") as string | any
+    );
+
+    const updatedInvoice = localStorageData.filter(
+      (data: any) => data.id !== props.id
+    );
+
     const formData = {
-      id: uid.rnd(),
+      id: props.id,
       totalPrice,
-      invoiceInfo: { details, productList: data },
+      invoiceInfo: {
+        details,
+        productList: data,
+      },
     };
 
-    invoiceInfoList.unshift(formData);
-    props.close();
+    console.log(formData);
 
-    window.localStorage.setItem("invoice", JSON.stringify(invoiceInfoList));
+    updatedInvoice.unshift(formData);
+
+    window.localStorage.setItem("invoice", JSON.stringify(updatedInvoice));
+    navigate("/", { replace: true });
   };
 
   return (
@@ -255,73 +261,68 @@ const BillForm = (props: IBillForm) => {
             ))}
           </select>
 
-          {productInput && (
-            <>
-              <h1 className="mt-10 mb-4 lg:text-2xl text-base font-bold">
-                Purchase Info
-              </h1>
-              {data.map((item: any, index: number) => (
-                <Fragment key={index}>
-                  <div className="grid lg:grid-cols-5 grid-cols-6 gap-4">
-                    <div className="lg:col-span-2 col-span-6">
-                      <label
-                        htmlFor="ProductName"
-                        className="text-sm font-semibold"
-                      >
-                        Product Name
-                      </label>
-                      <input
-                        type="text"
-                        name="productName"
-                        id="ProductName"
-                        value={item.productName}
-                        onChange={(evt) => handleChange(evt, index)}
-                        className="block w-full mt-1 lg:mb-4 mb-0 outline-none border-[1px] border-gray-300 focus:border-[#34CAA5] px-4 py-[0.4rem] rounded-lg placeholder:text-[#C4C4C4] placeholder:font-normal placeholder:text-sm lg:text-base text-sm dark:text-black"
-                        placeholder="LG Smart 4k TV"
-                      />
-                    </div>
-                    <div className="lg:col-span-2 col-span-3">
-                      <label htmlFor="Price" className="text-sm font-semibold">
-                        Price
-                      </label>
-                      <input
-                        type="number"
-                        name="price"
-                        id="Price"
-                        value={item.price}
-                        onChange={(evt) => handleChange(evt, index)}
-                        className="block w-full mt-1 mb-4 outline-none border-[1px] border-gray-300 focus:border-[#34CAA5] px-4 py-[0.4rem] rounded-lg placeholder:text-[#C4C4C4] placeholder:font-normal placeholder:text-sm lg:text-base text-sm dark:text-black"
-                        placeholder="238000"
-                      />
-                    </div>
-                    <div className="lg:col-span-1 col-span-3">
-                      <label
-                        htmlFor="Quantity"
-                        className="text-sm font-semibold"
-                      >
-                        Quantity
-                      </label>
-                      <input
-                        type="number"
-                        name="quantity"
-                        id="Quantity"
-                        value={item.quantity}
-                        onChange={(evt) => handleChange(evt, index)}
-                        className="block w-full mt-1 mb-4 outline-none border-[1px] border-gray-300 focus:border-[#34CAA5] px-4 py-[0.4rem] rounded-lg placeholder:text-[#C4C4C4] placeholder:font-normal placeholder:text-sm lg:text-base text-sm dark:text-black"
-                        placeholder="1"
-                      />
-                    </div>
+          <>
+            <h1 className="mt-10 mb-4 lg:text-2xl text-base font-bold">
+              Purchase Info
+            </h1>
+            {data.map((item: any, index: number) => (
+              <Fragment key={index}>
+                <div className="grid lg:grid-cols-5 grid-cols-6 gap-4">
+                  <div className="lg:col-span-2 col-span-6">
+                    <label
+                      htmlFor="ProductName"
+                      className="text-sm font-semibold"
+                    >
+                      Product Name
+                    </label>
+                    <input
+                      type="text"
+                      name="productName"
+                      id="ProductName"
+                      value={item.productName}
+                      onChange={(evt) => handleChange(evt, index)}
+                      className="block w-full mt-1 lg:mb-4 mb-0 outline-none border-[1px] border-gray-300 focus:border-[#34CAA5] px-4 py-[0.4rem] rounded-lg placeholder:text-[#C4C4C4] placeholder:font-normal placeholder:text-sm lg:text-base text-sm dark:text-black"
+                      placeholder="LG Smart 4k TV"
+                    />
                   </div>
-                  <button
-                    className="py-2 px-6 rounded-md text-sm bg-red-500 text-white mb-6"
-                    onClick={(evt) => delProduct(evt, index)}
-                  >
-                    Remove
-                  </button>
-                </Fragment>
-              ))}
-            </>
-          )}
+                  <div className="lg:col-span-2 col-span-3">
+                    <label htmlFor="Price" className="text-sm font-semibold">
+                      Price
+                    </label>
+                    <input
+                      type="number"
+                      name="price"
+                      id="Price"
+                      value={item.price}
+                      onChange={(evt) => handleChange(evt, index)}
+                      className="block w-full mt-1 mb-4 outline-none border-[1px] border-gray-300 focus:border-[#34CAA5] px-4 py-[0.4rem] rounded-lg placeholder:text-[#C4C4C4] placeholder:font-normal placeholder:text-sm lg:text-base text-sm dark:text-black"
+                      placeholder="238000"
+                    />
+                  </div>
+                  <div className="lg:col-span-1 col-span-3">
+                    <label htmlFor="Quantity" className="text-sm font-semibold">
+                      Quantity
+                    </label>
+                    <input
+                      type="number"
+                      name="quantity"
+                      id="Quantity"
+                      value={item.quantity}
+                      onChange={(evt) => handleChange(evt, index)}
+                      className="block w-full mt-1 mb-4 outline-none border-[1px] border-gray-300 focus:border-[#34CAA5] px-4 py-[0.4rem] rounded-lg placeholder:text-[#C4C4C4] placeholder:font-normal placeholder:text-sm lg:text-base text-sm dark:text-black"
+                      placeholder="1"
+                    />
+                  </div>
+                </div>
+                <button
+                  className="py-2 px-6 rounded-md text-sm bg-red-500 text-white mb-6"
+                  onClick={(evt) => delProduct(evt, index)}
+                >
+                  Remove
+                </button>
+              </Fragment>
+            ))}
+          </>
 
           <div className="w-4/5 mx-auto mt-8 lg:mb-0 mb-6">
             {" "}
@@ -341,4 +342,4 @@ const BillForm = (props: IBillForm) => {
   );
 };
 
-export default BillForm;
+export default EditBillForm;
