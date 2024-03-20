@@ -190,12 +190,15 @@ const InvoiceDetail = () => {
                     >
                       Delete
                     </div>
-                    <div
-                      onClick={markAsPaid}
-                      className="px-5 py-2 bg-green-100/40 dark:bg-green-500 text-sm font-semibold rounded-full cursor-pointer"
-                    >
-                      Mark as Paid
-                    </div>
+                    {invoiceDetailInfo.invoiceInfo.details.status !==
+                    "Success" ? (
+                      <div
+                        onClick={markAsPaid}
+                        className="px-5 py-2 bg-green-100/40 dark:bg-green-500 text-sm font-semibold rounded-full cursor-pointer"
+                      >
+                        Mark as Paid
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </div>
